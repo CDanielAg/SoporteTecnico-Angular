@@ -14,7 +14,7 @@ export class TicketService {
     return this.http.get<Ticket[]>(`${this.apiUrl}?usuarioId=${usuarioId}`);
   }
 
-  changeTicketStatus(ticketId: number, nuevoEstado: string): Observable<Ticket> {
-    return this.http.patch<Ticket>(`${this.apiUrl}/${ticketId}/estado`, { estado: nuevoEstado });
+  changeTicketStatus(ticketId: number, nuevoEstadoEnviar: string): Observable<Ticket> {
+    return this.http.patch<Ticket>(`${this.apiUrl}/${ticketId}/estado`, { nuevoEstado: nuevoEstadoEnviar });
   }
 }

@@ -3,12 +3,14 @@ import { LoginRequest } from '../model/login-request';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Usuario } from '../model/usuario';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private http = inject(HttpClient);
+  private router = inject(Router);
   private baseUrl = 'http://localhost:8080/api/auth';
 
   login(credentials: LoginRequest): Observable<Usuario>{
@@ -26,5 +28,10 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem('usuario');
+    this.router.navigate(['/login']);
+  }
+
+  estaLogueado(): boolean {
+    return this.obtenerUsuarioActual() !== null;
   }
 }

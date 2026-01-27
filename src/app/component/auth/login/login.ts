@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../service/auth.service';
@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './login.html',
   styleUrl: './login.scss',
 })
-export class Login {
+export class Login implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
   private formBuilder = inject(FormBuilder);
@@ -42,6 +42,12 @@ export class Login {
       });
     } else {
       this.loginForm.markAllAsTouched();
+    }
+  }
+
+  ngOnInit(): void {
+    if (this.authService.estaLogueado()) {
+      this.router.navigate(['/dashboard']);
     }
   }
 }
