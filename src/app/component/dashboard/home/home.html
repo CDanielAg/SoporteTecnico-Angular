@@ -1,1 +1,57 @@
-<p>home works!</p>
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Mis Tickets</h2>
+    <button class="btn btn-primary">
+      <i class="bi bi-plus-lg"></i> Nuevo Ticket
+    </button>
+  </div>
+
+  <div *ngIf="cargando" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Cargando...</span>
+    </div>
+  </div>
+
+  <div *ngIf="!cargando && tickets.length === 0" class="alert alert-info">
+    No tienes tickets registrados. ¡Todo marcha bien!
+  </div>
+
+  <div *ngIf="!cargando && tickets.length > 0" class="card shadow-sm">
+    <div class="card-body p-0">
+      <table class="table table-hover mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>ID</th>
+            <th>Título</th>
+            <th>Prioridad</th>
+            <th>Estado</th>
+            <th>Fecha</th>
+            <th>Asignado a</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let ticket of tickets">
+            <td>#{{ ticket.id }}</td>
+            <td class="fw-bold">{{ ticket.titulo }}</td>
+            <td>
+              <span class="badge" [ngClass]="getBadgeClass(ticket.prioridad)">
+                {{ ticket.prioridad }}
+              </span>
+            </td>
+            <td>{{ ticket.estado }}</td>
+            <td>{{ ticket.createdAt | date:'short' }}</td>
+            <td>
+              {{ ticket.tecnicoAsignado ? ticket.tecnicoAsignado.nombre : 'Sin asignar' }}
+            </td>
+            <td>
+              <button class="btn btn-sm btn-outline-secondary">
+                <i class="bi bi-eye"></i> Ver
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,26 +1,30 @@
-<div class="row justify-content-center">
-    <div class="col-md-4">
-        <h2>Iniciar Sesión</h2>
-        <p>Sistema de Soporte Técnico</p>
+<div class="d-flex justify-content-center align-items-center flex-grow-1">
+    
+    <div class="col-11 col-sm-8 col-md-4">
+        
+        <h2 class="text-center">Iniciar Sesión</h2>
+        <p class="text-center text-muted">Sistema de Soporte Técnico</p>
 
         @if (mensajeError) {
-        <div class="alert alert-danger" role="alert">
-            {{ mensajeError }}
-        </div>
+            <div class="alert alert-danger text-center" role="alert">
+                {{ mensajeError }}
+            </div>
         }
 
-        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="mt-4">
             <div class="mb-3">
                 <label for="usuarioInput" class="form-label">Nombre de Usuario</label>
                 <input type="text" class="form-control"
                     [class.is-invalid]="loginForm.get('usuario')?.invalid && loginForm.get('usuario')?.touched"
                     id="usuarioInput" formControlName="usuario">
+                
                 @if (loginForm.get('usuario')?.invalid && loginForm.get('usuario')?.touched) {
-                <div class="invalid-feedback">
-                    El usuario es obligatorio.
-                </div>
+                    <div class="invalid-feedback">
+                        El usuario es obligatorio.
+                    </div>
                 }
             </div>
+
             <div class="mb-3">
                 <label for="passwordInput" class="form-label">Contraseña</label>
                 <input type="password" class="form-control"
@@ -28,13 +32,15 @@
                     id="passwordInput" formControlName="password">
 
                 @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
-                <div class="invalid-feedback">
-                    La contraseña es obligatoria.
-                </div>
+                    <div class="invalid-feedback">
+                        La contraseña es obligatoria.
+                    </div>
                 }
             </div>
-            <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid">Submit</button>
+
+            <button type="submit" class="btn btn-primary w-100 mt-2" [disabled]="loginForm.invalid">
+                Ingresar
+            </button>
         </form>
     </div>
-
 </div>
