@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Ticket } from '../model/ticket';
+import { TicketRequest } from '../model/ticket-request';
 
 @Injectable({
   providedIn: 'root'
@@ -16,5 +17,9 @@ export class TicketService {
 
   changeTicketStatus(ticketId: number, nuevoEstadoEnviar: string): Observable<Ticket> {
     return this.http.patch<Ticket>(`${this.apiUrl}/${ticketId}/estado`, { nuevoEstado: nuevoEstadoEnviar });
+  }
+
+  createTicket(ticket: TicketRequest): Observable<Ticket> {
+    return this.http.post<Ticket>(this.apiUrl, ticket);
   }
 }
