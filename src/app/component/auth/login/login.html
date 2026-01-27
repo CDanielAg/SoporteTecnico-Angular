@@ -1,1 +1,40 @@
-<p>login works!</p>
+<div class="row justify-content-center">
+    <div class="col-md-4">
+        <h2>Iniciar Sesión</h2>
+        <p>Sistema de Soporte Técnico</p>
+
+        @if (mensajeError) {
+        <div class="alert alert-danger" role="alert">
+            {{ mensajeError }}
+        </div>
+        }
+
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+            <div class="mb-3">
+                <label for="usuarioInput" class="form-label">Nombre de Usuario</label>
+                <input type="text" class="form-control"
+                    [class.is-invalid]="loginForm.get('usuario')?.invalid && loginForm.get('usuario')?.touched"
+                    id="usuarioInput" formControlName="usuario">
+                @if (loginForm.get('usuario')?.invalid && loginForm.get('usuario')?.touched) {
+                <div class="invalid-feedback">
+                    El usuario es obligatorio.
+                </div>
+                }
+            </div>
+            <div class="mb-3">
+                <label for="passwordInput" class="form-label">Contraseña</label>
+                <input type="password" class="form-control"
+                    [class.is-invalid]="loginForm.get('password')?.invalid && loginForm.get('password')?.touched"
+                    id="passwordInput" formControlName="password">
+
+                @if (loginForm.get('password')?.invalid && loginForm.get('password')?.touched) {
+                <div class="invalid-feedback">
+                    La contraseña es obligatoria.
+                </div>
+                }
+            </div>
+            <button type="submit" class="btn btn-primary" [disabled]="loginForm.invalid">Submit</button>
+        </form>
+    </div>
+
+</div>
