@@ -5,11 +5,12 @@ import { AuthService } from '../../../service/auth.service';
 import { TicketService } from '../../../service/ticket.service';
 import { Ticket } from '../../../model/ticket';
 import { Usuario } from '../../../model/usuario';
+import { ModalAsignacion } from '../../shared/modal-asignacion/modal-asignacion';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, DatePipe, RouterLink], 
+  imports: [CommonModule, DatePipe, RouterLink, ModalAsignacion], 
   templateUrl: './home.html',
   styleUrl: './home.scss',
 })
@@ -22,6 +23,7 @@ export class Home implements OnInit {
   usuarioActual: Usuario | null = null;
   tickets: Ticket[] = [];
   cargando: boolean = true;
+  ticketSeleccionadoId: number | null = null;
 
   ngOnInit(): void {
     this.usuarioActual = this.authService.obtenerUsuarioActual();
@@ -83,6 +85,16 @@ export class Home implements OnInit {
       case 'MEDIA': return 'bg-warning text-dark';
       case 'BAJA': return 'bg-success';
       default: return 'bg-secondary';
+    }
+  }
+
+  abrirModalAsignacion(id: number) {
+    this.ticketSeleccionadoId = id;
+  }
+
+  alTerminarAsignacion() {
+    if (this.usuarioActual) {
+      this.cargarTickets(this.usuarioActual.id);
     }
   }
 }

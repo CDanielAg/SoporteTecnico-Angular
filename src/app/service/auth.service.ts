@@ -34,4 +34,8 @@ export class AuthService {
   estaLogueado(): boolean {
     return this.obtenerUsuarioActual() !== null;
   }
+
+  getTecnicos(): Observable<Usuario[]> {
+    return this.http.get<Usuario[]>(`${this.baseUrl}/tecnicos`);
+  }
 }

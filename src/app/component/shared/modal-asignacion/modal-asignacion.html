@@ -1,0 +1,32 @@
+<div class="modal fade" id="modalAsignacion" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Asignar Técnico</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      
+      <div class="modal-body">
+        <p>Selecciona el técnico responsable para el Ticket #{{ ticketId }}:</p>
+        
+        <select class="form-select" [(ngModel)]="tecnicoSeleccionado" [disabled]="guardando">
+          <option [ngValue]="null">-- Seleccionar --</option>
+          @for (tec of tecnicos; track tec.id) {
+            <option [ngValue]="tec.id">{{ tec.nombre }}</option>
+          }
+        </select>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        
+        <button type="button" class="btn btn-primary" 
+                (click)="confirmar()" 
+                data-bs-dismiss="modal"
+                [disabled]="!tecnicoSeleccionado || guardando">
+          {{ guardando ? 'Guardando...' : 'Guardar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

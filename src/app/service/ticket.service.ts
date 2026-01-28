@@ -9,7 +9,7 @@ import { TicketRequest } from '../model/ticket-request';
 })
 export class TicketService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8080/api/tickets'; 
+  private apiUrl = 'http://localhost:8080/api/tickets';
 
   getTickets(usuarioId: number): Observable<Ticket[]> {
     return this.http.get<Ticket[]>(`${this.apiUrl}?usuarioId=${usuarioId}`);
@@ -25,5 +25,11 @@ export class TicketService {
 
   getTicketById(ticketId: number): Observable<Ticket> {
     return this.http.get<Ticket>(`${this.apiUrl}/${ticketId}`);
+  }
+
+  asignarTecnico(ticketId: number, tecnicoId: number): Observable<Ticket> {
+    return this.http.patch<Ticket>(`${this.apiUrl}/${ticketId}/asignar`, null, {
+      params: { tecnicoId: tecnicoId.toString() }
+    });
   }
 }

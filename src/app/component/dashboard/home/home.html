@@ -68,10 +68,14 @@
 
                     @if (usuarioActual?.rol === 'ADMIN' && ticket.estado !== 'CERRADO' && ticket.estado !== 'RESUELTO')
                     {
-                    <button class="btn btn-sm btn-outline-primary" title="Asignar Técnico">
-                        Asignar
+                    <button class="btn btn-sm btn-outline-primary me-1" title="Asignar Técnico" data-bs-toggle="modal"
+                        data-bs-target="#modalAsignacion" (click)="abrirModalAsignacion(ticket.id)">
+                        <i class="bi bi-person-plus"></i> Asignar
                     </button>
                     }
+                    <app-modal-asignacion [ticketId]="ticketSeleccionadoId"
+                        (asignacionCompletada)="alTerminarAsignacion()">
+                    </app-modal-asignacion>
 
                     @if (usuarioActual?.rol === 'TECNICO' && ticket.estado !== 'RESUELTO' && ticket.estado !==
                     'CERRADO') {

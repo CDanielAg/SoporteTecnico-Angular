@@ -1,16 +1,16 @@
-import { inject, Component } from '@angular/core';
-import { OnInit } from '@angular/core';
+import { inject, Component, ChangeDetectorRef, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TicketService } from '../../../service/ticket.service';
 import { AuthService } from '../../../service/auth.service';
 import { Location } from '@angular/common';
 import { Usuario } from '../../../model/usuario';
 import { Ticket } from '../../../model/ticket';
-import { CommonModule, DatePipe } from '@angular/common';
+import { CommonModule, DatePipe} from '@angular/common';
+import { ModalAsignacion } from '../../shared/modal-asignacion/modal-asignacion';
 
 @Component({
   selector: 'app-ticket-detail',
-  imports: [CommonModule, DatePipe],
+  imports: [CommonModule, DatePipe, ModalAsignacion],
   templateUrl: './ticket-detail.html',
   styleUrl: './ticket-detail.scss',
 })
@@ -20,6 +20,7 @@ export class TicketDetail implements OnInit{
   private ticketService = inject(TicketService);
   private authService = inject(AuthService);
   private location = inject(Location);
+  private cd = inject(ChangeDetectorRef);
 
   ticket: Ticket | null = null;
   usuarioActual: Usuario | null = null;
@@ -41,6 +42,7 @@ export class TicketDetail implements OnInit{
       next: (data) => {
         this.ticket = data;
         this.cargando = false;
+        this.cd.detectChanges();
       },
       error: (err) => {
         console.error('Error al cargar ticket:', err);
@@ -64,10 +66,6 @@ export class TicketDetail implements OnInit{
     }
   }
 
-  asignarTecnico() {
-    alert('Funcionalidad de asignar técnico pendiente de implementar (requiere Modal).');
-  }
-
   private actualizarEstado(nuevoEstado: string) {
     if (!this.ticket) return;
     
@@ -75,6 +73,7 @@ export class TicketDetail implements OnInit{
       next: (ticketActualizado) => {
         this.ticket = ticketActualizado; 
         alert(`Estado actualizado a: ${nuevoEstado}`);
+        this.cd.detectChanges();
       },
       error: (err) => alert('Error al actualizar el estado.')
     });
@@ -90,6 +89,12 @@ export class TicketDetail implements OnInit{
       case 'MEDIA': return 'bg-warning text-dark';
       case 'BAJA': return 'bg-success';
       default: return 'bg-secondary';
+    }
+  }
+
+  recargarDetalles() {
+    if (this.ticket) {
+      this.cargarTicket(this.ticket.id);
     }
   }
 

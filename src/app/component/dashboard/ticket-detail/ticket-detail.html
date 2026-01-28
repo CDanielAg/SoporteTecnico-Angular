@@ -1,86 +1,91 @@
 <div class="container mt-4">
-  <button class="btn btn-outline-secondary mb-3" (click)="volver()">
-    <i class="bi bi-arrow-left"></i> Volver al listado
-  </button>
+    <button class="btn btn-outline-secondary mb-3" (click)="volver()">
+        <i class="bi bi-arrow-left"></i> Volver al listado
+    </button>
 
-  @if (cargando) {
+    @if (cargando) {
     <div class="text-center py-5">
-      <div class="spinner-border text-primary"></div>
-      <p class="mt-2">Cargando detalles...</p>
+        <div class="spinner-border text-primary"></div>
+        <p class="mt-2">Cargando detalles...</p>
     </div>
-  } @else if (ticket) {
-    
+    } @else if (ticket) {
+
     <div class="card shadow-sm">
-      <div class="card-header d-flex justify-content-between align-items-center bg-white py-3">
-        <div>
-          <h4 class="mb-0 text-primary">Ticket #{{ ticket.id }}</h4>
-          <small class="text-muted">Creado el {{ ticket.createdAt | date:'medium' }}</small>
-        </div>
-        <div>
-          <span class="badge me-2" [ngClass]="getBadgeClass(ticket.prioridad)">
-            {{ ticket.prioridad }}
-          </span>
-          <span class="badge bg-dark">{{ ticket.estado }}</span>
-        </div>
-      </div>
-
-      <div class="card-body">
-        <h5 class="card-title fw-bold mb-3">{{ ticket.titulo }}</h5>
-        
-        <div class="p-3 bg-light rounded mb-4 border">
-          <p class="mb-0" style="white-space: pre-wrap;">{{ ticket.descripcion }}</p>
-        </div>
-
-        <div class="row g-3 mb-4">
-          <div class="col-md-6">
-            <div class="d-flex align-items-center">
-              <i class="bi bi-person-circle fs-4 me-2 text-secondary"></i>
-              <div>
-                <small class="d-block text-muted">Solicitado por</small>
-                <strong>{{ ticket.creador.nombre }}</strong>
-              </div>
+        <div class="card-header d-flex justify-content-between align-items-center bg-white py-3">
+            <div>
+                <h4 class="mb-0 text-primary">Ticket #{{ ticket.id }}</h4>
+                <small class="text-muted">Creado el {{ ticket.createdAt | date:'medium' }}</small>
             </div>
-          </div>
-          <div class="col-md-6">
-            <div class="d-flex align-items-center">
-              <i class="bi bi-tools fs-4 me-2 text-secondary"></i>
-              <div>
-                <small class="d-block text-muted">Técnico Asignado</small>
-                <strong>
-                  {{ ticket.tecnicoAsignado ? ticket.tecnicoAsignado.nombre : 'Sin Asignar' }}
-                </strong>
-              </div>
+            <div>
+                <span class="badge me-2" [ngClass]="getBadgeClass(ticket.prioridad)">
+                    {{ ticket.prioridad }}
+                </span>
+                <span class="badge bg-dark">{{ ticket.estado }}</span>
             </div>
-          </div>
         </div>
 
-        <hr>
+        <div class="card-body">
+            <h5 class="card-title fw-bold mb-3">{{ ticket.titulo }}</h5>
 
-        <div class="d-flex justify-content-end gap-2">
-          
-          @if (usuarioActual?.rol === 'ADMIN' && ticket.estado !== 'CERRADO') {
-            <button class="btn btn-primary" (click)="asignarTecnico()">
-              <i class="bi bi-person-plus"></i> Asignar Técnico
-            </button>
-          }
+            <div class="p-3 bg-light rounded mb-4 border">
+                <p class="mb-0" style="white-space: pre-wrap;">{{ ticket.descripcion }}</p>
+            </div>
 
-          @if (usuarioActual?.rol === 'TECNICO' && ticket.estado !== 'RESUELTO' && ticket.estado !== 'CERRADO') {
-            <button class="btn btn-success" (click)="resolverTicket()">
-              <i class="bi bi-check-circle"></i> Marcar como Resuelto
-            </button>
-          }
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-person-circle fs-4 me-2 text-secondary"></i>
+                        <div>
+                            <small class="d-block text-muted">Solicitado por</small>
+                            <strong>{{ ticket.creador.nombre }}</strong>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-tools fs-4 me-2 text-secondary"></i>
+                        <div>
+                            <small class="d-block text-muted">Técnico Asignado</small>
+                            <strong>
+                                {{ ticket.tecnicoAsignado ? ticket.tecnicoAsignado.nombre : 'Sin Asignar' }}
+                            </strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-          @if (usuarioActual?.rol === 'EMPLEADO' && ticket.estado === 'RESUELTO') {
-            <button class="btn btn-primary" (click)="cerrarTicket()">
-              <i class="bi bi-check2-all"></i> Aceptar Solución
-            </button>
-          }
+            <hr>
+
+            <div class="d-flex justify-content-end gap-2">
+
+                @if (usuarioActual?.rol === 'ADMIN' && ticket.estado !== 'CERRADO') {
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAsignacion">
+                    <i class="bi bi-person-plus"></i> Asignar Técnico
+                </button>
+                }
+
+                @if (ticket) {
+                <app-modal-asignacion [ticketId]="ticket.id" (asignacionCompletada)="recargarDetalles()">
+                </app-modal-asignacion>
+                }
+
+                @if (usuarioActual?.rol === 'TECNICO' && ticket.estado !== 'RESUELTO' && ticket.estado !== 'CERRADO') {
+                <button class="btn btn-success" (click)="resolverTicket()">
+                    <i class="bi bi-check-circle"></i> Marcar como Resuelto
+                </button>
+                }
+
+                @if (usuarioActual?.rol === 'EMPLEADO' && ticket.estado === 'RESUELTO') {
+                <button class="btn btn-primary" (click)="cerrarTicket()">
+                    <i class="bi bi-check2-all"></i> Aceptar Solución
+                </button>
+                }
+            </div>
+
         </div>
-
-      </div>
     </div>
 
-  } @else {
+    } @else {
     <div class="alert alert-danger">No se encontró el ticket solicitado.</div>
-  }
+    }
 </div>
