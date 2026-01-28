@@ -22,4 +22,8 @@ export class TicketService {
   createTicket(ticket: TicketRequest): Observable<Ticket> {
     return this.http.post<Ticket>(this.apiUrl, ticket);
   }
+
+  getTicketById(ticketId: number): Observable<Ticket> {
+    return this.http.get<Ticket>(`${this.apiUrl}/${ticketId}`);
+  }
 }

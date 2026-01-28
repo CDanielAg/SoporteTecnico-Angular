@@ -1,98 +1,97 @@
 <div class="container mt-4">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>
-      @if (usuarioActual?.rol === 'ADMIN') { Panel de Asignaciones }
-      @else if (usuarioActual?.rol === 'TECNICO') { Mis Tickets Asignados }
-      @else { Mis Tickets }
-    </h2>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>
+            @if (usuarioActual?.rol === 'ADMIN') { Panel de Asignaciones }
+            @else if (usuarioActual?.rol === 'TECNICO') { Mis Tickets Asignados }
+            @else { Mis Tickets }
+        </h2>
 
-    @if (usuarioActual?.rol === 'EMPLEADO') {
-      <button class="btn btn-primary" routerLink="/crear-ticket">
-        <i class="bi bi-plus-lg"></i> Nuevo Ticket
-      </button>
-    }
-  </div>
-
-  @if (cargando) {
-    <div class="text-center py-5">
-      <div class="spinner-border text-primary" role="status">
-        <span class="visually-hidden">Cargando...</span>
-      </div>
-      <p class="mt-2 text-muted">Cargando tickets...</p>
+        @if (usuarioActual?.rol === 'EMPLEADO') {
+        <button class="btn btn-primary" routerLink="/crear-ticket">
+            <i class="bi bi-plus-lg"></i> Nuevo Ticket
+        </button>
+        }
     </div>
-  } 
-  
-  @else {
-    @if (tickets.length === 0) {
-      <div class="alert alert-info">
-        No hay tickets para mostrar.
-      </div>
-    } 
-    
+
+    @if (cargando) {
+    <div class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+        <p class="mt-2 text-muted">Cargando tickets...</p>
+    </div>
+    }
+
     @else {
-      <table class="table">
+    @if (tickets.length === 0) {
+    <div class="alert alert-info">
+        No hay tickets para mostrar.
+    </div>
+    }
+
+    @else {
+    <table class="table">
         <thead class="table-dark">
-          <tr>
-            <th>ID</th>
-            <th>Título</th>
-            <th>Prioridad</th>
-            <th>Estado</th>
-            <th>Fecha</th>
-            <th>Asignado</th>
-            <th>Acciones</th>
-          </tr>
+            <tr>
+                <th>ID</th>
+                <th>Título</th>
+                <th>Prioridad</th>
+                <th>Estado</th>
+                <th>Fecha</th>
+                <th>Asignado</th>
+                <th>Acciones</th>
+            </tr>
         </thead>
         <tbody>
-          @for (ticket of tickets; track ticket.id) {
+            @for (ticket of tickets; track ticket.id) {
             <tr>
-              <td>#{{ ticket.id }}</td>
-              <td class="fw-bold">{{ ticket.titulo }}</td>
-              <td>
-                <span class="badge" [ngClass]="getBadgeClass(ticket.prioridad)">
-                  {{ ticket.prioridad }}
-                </span>
-              </td>
-              <td [class.text-success]="ticket.estado === 'RESUELTO'" 
-                  [class.text-muted]="ticket.estado === 'CERRADO'">
-                  {{ ticket.estado }}
-              </td>
-              <td>{{ ticket.createdAt | date:'short' }}</td>
-              <td>
-                {{ ticket.tecnicoAsignado ? ticket.tecnicoAsignado.nombre : 'Sin asignar' }}
-              </td>
-              <td>
-                <button class="btn btn-sm btn-outline-secondary me-1" title="Ver Detalle">
-                  Ver
-                </button>
+                <td>#{{ ticket.id }}</td>
+                <td class="fw-bold">{{ ticket.titulo }}</td>
+                <td>
+                    <span class="badge" [ngClass]="getBadgeClass(ticket.prioridad)">
+                        {{ ticket.prioridad }}
+                    </span>
+                </td>
+                <td [class.text-success]="ticket.estado === 'RESUELTO'"
+                    [class.text-muted]="ticket.estado === 'CERRADO'">
+                    {{ ticket.estado }}
+                </td>
+                <td>{{ ticket.createdAt | date:'short' }}</td>
+                <td>
+                    {{ ticket.tecnicoAsignado ? ticket.tecnicoAsignado.nombre : 'Sin asignar' }}
+                </td>
+                <td>
+                    <a [routerLink]="['/ticket', ticket.id]" class="btn btn-sm btn-outline-secondary me-1"
+                        title="Ver Detalle">
+                        <i class="bi bi-eye"></i> Ver
+                    </a>
 
-                @if (usuarioActual?.rol === 'ADMIN' && ticket.estado !== 'CERRADO' && ticket.estado !== 'RESUELTO') {
-                  <button class="btn btn-sm btn-outline-primary" title="Asignar Técnico">
-                    Asignar
-                  </button>
-                }
+                    @if (usuarioActual?.rol === 'ADMIN' && ticket.estado !== 'CERRADO' && ticket.estado !== 'RESUELTO')
+                    {
+                    <button class="btn btn-sm btn-outline-primary" title="Asignar Técnico">
+                        Asignar
+                    </button>
+                    }
 
-                @if (usuarioActual?.rol === 'TECNICO' && ticket.estado !== 'RESUELTO' && ticket.estado !== 'CERRADO') {
-                  <button 
-                    class="btn btn-sm btn-success" 
-                    title="Marcar como Resuelto"
-                    (click)="resolverTicket(ticket)">
-                    Resolver
-                  </button>
-                }
+                    @if (usuarioActual?.rol === 'TECNICO' && ticket.estado !== 'RESUELTO' && ticket.estado !==
+                    'CERRADO') {
+                    <button class="btn btn-sm btn-success" title="Marcar como Resuelto"
+                        (click)="resolverTicket(ticket)">
+                        Resolver
+                    </button>
+                    }
 
-                @if (usuarioActual?.rol === 'EMPLEADO' && ticket.estado === 'RESUELTO') {
-                  <button 
-                    class="btn btn-sm btn-primary" 
-                    title="Aceptar Solución y Cerrar"
-                    (click)="cerrarTicket(ticket)">
-                    <i class="bi bi-check2-all"></i> Aceptar
-                  </button>
-                }
-              </td>
+                    @if (usuarioActual?.rol === 'EMPLEADO' && ticket.estado === 'RESUELTO') {
+                    <button class="btn btn-sm btn-primary" title="Aceptar Solución y Cerrar"
+                        (click)="cerrarTicket(ticket)">
+                        <i class="bi bi-check2-all"></i> Aceptar
+                    </button>
+                    }
+                </td>
             </tr>
-          }
+            }
         </tbody>
-      </table>
+    </table>
     }
-  }
+    }
 </div>
