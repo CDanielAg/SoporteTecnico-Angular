@@ -88,4 +88,8 @@
     } @else {
     <div class="alert alert-danger">No se encontró el ticket solicitado.</div>
     }
+    @if (ticket) {
+    <app-ticket-comentarios [ticketId]="ticket.id" [estadoTicket]="ticket.estado">
+    </app-ticket-comentarios>
+    }
 </div>

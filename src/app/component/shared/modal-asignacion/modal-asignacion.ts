@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnInit, Output, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Usuario } from '../../../model/usuario';
@@ -14,9 +14,9 @@ import { TicketService } from '../../../service/ticket.service';
 export class ModalAsignacion implements OnInit {
   private authService = inject(AuthService);
   private ticketService = inject(TicketService);
+  private cd = inject(ChangeDetectorRef); 
 
   @Input() ticketId: number | null = null;
-  
   @Output() asignacionCompletada = new EventEmitter<void>();
 
   tecnicos: Usuario[] = [];
@@ -29,8 +29,12 @@ export class ModalAsignacion implements OnInit {
 
   cargarTecnicos() {
     this.authService.getTecnicos().subscribe({
-      next: (data) => this.tecnicos = data,
-      error: (err) => console.error('Error cargando técnicos', err)
+      next: (data) => {
+        this.tecnicos = data;
+        console.log('Técnicos cargados:', data);
+        this.cd.detectChanges();
+      },
+      error: (err) => console.error('Error al cargar técnicos', err)
     });
   }
 
@@ -41,12 +45,13 @@ export class ModalAsignacion implements OnInit {
         next: () => {
           alert('Técnico asignado correctamente.');
           this.guardando = false;
-          this.tecnicoSeleccionado = null; 
-          this.asignacionCompletada.emit(); 
+          this.tecnicoSeleccionado = null;
+          this.asignacionCompletada.emit();
         },
         error: () => {
-          alert('Error al asignar.');
+          alert('Error al asignar técnico.');
           this.guardando = false;
+          this.cd.detectChanges();
         }
       });
     }

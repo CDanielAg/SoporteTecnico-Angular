@@ -7,10 +7,11 @@ import { Usuario } from '../../../model/usuario';
 import { Ticket } from '../../../model/ticket';
 import { CommonModule, DatePipe} from '@angular/common';
 import { ModalAsignacion } from '../../shared/modal-asignacion/modal-asignacion';
+import { TicketComentarios } from '../../shared/ticket-comentarios/ticket-comentarios';
 
 @Component({
   selector: 'app-ticket-detail',
-  imports: [CommonModule, DatePipe, ModalAsignacion],
+  imports: [CommonModule, DatePipe, ModalAsignacion, TicketComentarios],
   templateUrl: './ticket-detail.html',
   styleUrl: './ticket-detail.scss',
 })

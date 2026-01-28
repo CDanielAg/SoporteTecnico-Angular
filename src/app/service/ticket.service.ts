@@ -28,7 +28,7 @@ export class TicketService {
   }
 
   asignarTecnico(ticketId: number, tecnicoId: number): Observable<Ticket> {
-    return this.http.patch<Ticket>(`${this.apiUrl}/${ticketId}/asignar`, null, {
+    return this.http.put<Ticket>(`${this.apiUrl}/${ticketId}/asignar`, null, {
       params: { tecnicoId: tecnicoId.toString() }
     });
   }
